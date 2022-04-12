@@ -14,3 +14,13 @@
 | OOP     |   80 |
 | JFormDesigner      |   35 |
 | SQLite      |   75 |
+
+
+
+# Project Display Image
+<p>
+<a href="https://github.com/erkutozturkk/https://github.com/erkutozturkk/java-desktop-technical-service/blob/main/images/vesikal%C4%B1k.jpg" target="_blank">
+<img src="https://github.com/erkutozturkk/java-desktop-technical-service/blob/main/images/vesikal%C4%B1k.jpg" width="200" style="max-width:100%;"></a>
+    
+
+</p>  
