@@ -18,13 +18,7 @@
 
 
 # Project Display Image
-<p>
-<a href="https://github.com/erkutozturkk/https://github.com/erkutozturkk/java-desktop-technical-service/blob/main/images/vesikal%C4%B1k.jpg" target="_blank">
-<img src="https://github.com/erkutozturkk/java-desktop-technical-service/blob/main/images/vesikal%C4%B1k.jpg" width="200" style="max-width:100%;"></a>
- 
-    
 
-</p>  
 
 
 ### Java Desktop Application - Technical Service
@@ -55,7 +49,7 @@
   
 | CustomerAdd |
 | ------------ |
-| <a href="https://github.com/kardelentugay/java-desktop-technical-service/blob/main/images/addCustomer.png" target="_blank"><img src="https://github.com/kardelentugay/java-desktop-technical-service/blob/main/images/addCustomer.png" width="500" style="max-width:100%;"></a> |
+| <a href="https://github.com/erkutozturkk/java-desktop-technical-service/blob/main/images/Service-AddCustomer.png" target="_blank"><img src="https://github.com/erkutozturkk/java-desktop-technical-service/blob/main/images/Service-AddCustomer.png" width="500" style="max-width:100%;"></a> |
   
 | Services |
 | ------------ |
