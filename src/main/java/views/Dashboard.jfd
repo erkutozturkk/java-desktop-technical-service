@@ -1,11 +1,11 @@
-JFDML JFormDesigner: "7.0.5.4.420" Java: "11.0.13" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.5.4.420" Java: "11.0.14.1" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "views.Base", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq {space :::p, par l {seq {comp label1::::292:x, space s:::p, comp lblName:::p:351:p}, seq {comp button1:::p:77:p, space s:::p, comp button2:::p:77:p, space s:::p, comp button3:::p:77:p, space ::220:x, comp textField1:::p:174:p}, comp scrollPane2::l::661:x, comp scrollPane1::l::661:x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par b {comp lblName::b:p::p, comp label1::b:p::p}, space s:::p, par t {comp button1:::p::p, comp button2:::p::p, comp button3:::p::p, comp textField1::t:p::p}, space s:::p, comp scrollPane1:::p:90:p, space :p:38:p, comp scrollPane2:::p:94:p, space ::43:x}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane1::l::661:x, comp scrollPane2::t::661:x, seq {par l {seq {par t {seq t {space :0:0:x, comp lblName:::p:351:p}, seq t {comp textField2:::p::p, space ::134:x, comp btnAddCustomer:::p:77:p, space s:::p, comp btnAddService:::p:77:p}}, space :p:162:p}, seq l {par l {seq {comp label8:::p:55:p, space :p:352:p, comp btnArchive:::p:77:p}, comp textField3::l:p::p}, space ::67:x}}, comp btnLogOut:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp lblName:::p::p, par l {par l {seq t {space :::p, comp btnAddCustomer:::p::p}, seq l {space :p:9:p, par l:::p {comp btnLogOut::::62:x, comp btnAddService::t::62:x, comp btnArchive::::0:x}}}, seq l {space s:::p, comp label8:::p:35:p, space ::18:x, comp textField2:::p:20:p}}, space :p::p, comp scrollPane1:::p:90:p, space s:::p, comp textField3:::p:24:p, space :::p, comp scrollPane2::::146:x, space :::p}}"
 		} ) {
 			name: "this"
 			"defaultCloseOperation": 2
@@ -13,46 +13,65 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "lblName"
 			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label1"
-				"text": "Technical Service"
-			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "button1"
+				name: "btnAddCustomer"
 				"icon": new com.jformdesigner.model.SwingIcon( 0, "/UserAddIcon.png" )
 				"toolTipText": "Add Customer"
 				"focusable": false
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnCustomerAddClick", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "button2"
+				name: "btnAddService"
 				"icon": new com.jformdesigner.model.SwingIcon( 0, "/technical icon.png" )
 				"toolTipText": "Service Add"
 				"focusable": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnAddServiceClick", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
-				name: "button3"
+				name: "btnArchive"
 				"icon": new com.jformdesigner.model.SwingIcon( 0, "/archive icon.png" )
 				"toolTipText": "Archive"
 				"focusable": false
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnArchiveClick", true ) )
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
 				add( new FormComponent( "javax.swing.JTable" ) {
-					name: "tblNotCompleted"
+					name: "tblServiceDeliver"
 				} )
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane2"
 				add( new FormComponent( "javax.swing.JTable" ) {
-					name: "tblCompleted"
+					name: "tblServiceNew"
 				} )
 			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "btnLogOut"
+				"text": "LogOut"
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/loginBtn icon.png" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "btnLogOutClick", true ) )
+			} )
 			add( new FormComponent( "javax.swing.JTextField" ) {
-				name: "textField1"
+				name: "textField2"
+				"text": "Completed:"
+				"font": new java.awt.Font( "Segoe UI", 1, 12 )
+				"background": new java.awt.Color( 51, 255, 51, 255 )
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "textField3"
+				"text": "Waiting:"
+				"font": new java.awt.Font( "Segoe UI", 1, 12 )
+				"background": new java.awt.Color( 204, 0, 0, 255 )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label8"
+				"text": "TechNıke"
+				"font": new java.awt.Font( "Tw Cen MT", 0, 14 )
+				"foreground": new java.awt.Color( 102, 0, 0, 255 )
 			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 5, 0 )
+			"location": new java.awt.Point( 0, 0 )
 			"size": new java.awt.Dimension( 675, 425 )
 		} )
 	}

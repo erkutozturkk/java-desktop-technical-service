@@ -1,5 +1,5 @@
 /*
- * Created by JFormDesigner on Thu Apr 07 15:42:13 TRT 2022
+ * Created by JFormDesigner on Thu Apr 07 15:46:52 TRT 2022
  */
 
 package views;
@@ -18,270 +18,313 @@ import javax.swing.GroupLayout;
  * @author unknown
  */
 public class CustomerAdd extends Base {
-    CustomerImpl customerImpl=new CustomerImpl();
-
-
+    CustomerImpl cus = new CustomerImpl();
     public CustomerAdd() {
+
         initComponents();
+        tblCustomer.setModel(cus.model());
+        lblName.setText("Merhaba, " + UserImpl.name);
     }
+    private Customer fncDataValid(){
+        String name=txtName.getText().trim();
+        String surname=txtSurname.getText().trim();
+        String email=txtEmail.getText().trim().toLowerCase();  //boşluk varsa al trimle sil
+        String phone=txtPhone.getText().trim();
+        String address=txtAddress.getText().trim();
+
+        if (name.equals("")){
+            lblError.setText("Name is Empty!!!");
+            txtName.requestFocus();
+        }else if (surname.equals("")){
+            lblError.setText("Surname is Empty!!!");
+            txtSurname.requestFocus();
+        }else if (email.equals("")){
+            lblError.setText("Email is Empty!!!");
+            txtEmail.requestFocus();
+        }else if(!Util.isValidEmailAddress(email)){ //fprmatı başkaysa
+            lblError.setText("Email Validation Error!!!");
+            txtEmail.requestFocus();
+        }else if (phone.equals("")){ //boşşa sıfırsa
+            lblError.setText("Phone is Empty!!!");
+            txtPhone.requestFocus();//imleç otomatik olarak passwworde gelicek
+        }
+        else if (address.equals("")){ //boşşa sıfırsa
+            lblError.setText("Adress is Empty!!!");
+            txtAddress.requestFocus();//imleç otomatik olarak passwworde gelicek
+        }else {
+            lblError.setText("");
+            Customer c = new Customer(0,name,surname,email,phone,address);
+            return c;
+        }
+        return null; //olumsuz halinde
+
+    }
+
+    private void thisWindowClosing(WindowEvent e) {
+        new Dashboard().setVisible(true);
+    }
+
+
+    private void tblCustomerMouseClicked(MouseEvent e) {
+        rowVal();
+    }
+
+    private void tblCustomerKeyReleased(KeyEvent e) {
+        rowVal();
+    }
+
+    int row = -1;
+    int cid = 0;
+    int column = 0;
+    void rowVal(){
+        row = tblCustomer.getSelectedRow();
+        String name = (String) tblCustomer.getValueAt(row, 1);
+        String surname = (String) tblCustomer.getValueAt(row, 2);
+        String email = (String) tblCustomer.getValueAt(row, 3);
+        String phone = (String) tblCustomer.getValueAt(row, 4);
+        String address = (String) tblCustomer.getValueAt(row, 5);
+
+        txtName.setText(name);
+        txtSurname.setText(surname);
+        txtEmail.setText(email);
+        txtPhone.setText(phone);
+        txtAddress.setText(address);
+
+
+
+
+    }
+
+    private void btnDeleteClick(ActionEvent e) {
+        if(row != -1 ) {
+            row = tblCustomer.getSelectedRow();
+            cid = Integer.valueOf(tblCustomer.getModel().getValueAt(row,column).toString());
+            int answer = JOptionPane.showConfirmDialog(this, "Silmek istediginizden emin miisniz?", "Silme islemi", JOptionPane.YES_NO_OPTION);
+            if(answer==0){
+                cus.customerDelete(cid);
+                tblCustomer.setModel(cus.model());
+                row = -1;
+            }
+        } else{
+            JOptionPane.showMessageDialog(this, "Lutfen secim yapiniz.");
+        }
+    }
+
+    private void btnCustomerUpdateClick(ActionEvent e) {
+        Customer c = fncDataValid();
+        if(row != -1 ) {
+            row = tblCustomer.getSelectedRow();
+            cid = Integer.valueOf(tblCustomer.getModel().getValueAt(row,column).toString());
+            int answer = JOptionPane.showConfirmDialog(this, "Guncellemek istediginizden emin misniz?", "Guncelleme islemi", JOptionPane.YES_NO_OPTION);
+            if (answer == 0) {
+                cus.customerUpdate(c,cid);
+                tblCustomer.setModel(cus.model());
+                row = -1;
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Lutfen secim yapiniz.");
+        }
+    }
+
+    private void btnCustomerAdd(ActionEvent e) {
+        Customer c = fncDataValid();
+        if(c!=null){
+            int status = cus.customerInsert(c);
+            if (status>0){
+                System.out.println("Ekleme basarili");
+                txtName.setText("");
+                txtSurname.setText("");
+                txtEmail.setText("");
+                txtPhone.setText("");
+                txtAddress.setText("");
+                tblCustomer.setModel(cus.model() );
+            }
+            else {
+                if (status == -1){
+                    lblError.setText("E-mail or Phone have already used");
+                }
+                else {
+                    lblError.setText("Insert Error");
+                }
+            }
+        }
+    }
+
 
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         lblName = new JLabel();
-        panel1 = new JPanel();
-        scrollPane4 = new JScrollPane();
-        label2 = new JLabel();
-        label9 = new JLabel();
-        label10 = new JLabel();
-        label11 = new JLabel();
+        label3 = new JLabel();
         txtName = new JTextField();
-        txtSurname = new JTextField();
-        txtEmail = new JTextField();
+        label4 = new JLabel();
         txtPhone = new JTextField();
+        labell = new JLabel();
+        txtSurname = new JTextField();
         label6 = new JLabel();
+        txtEmail = new JTextField();
+        label1 = new JLabel();
         scrollPane1 = new JScrollPane();
         txtAddress = new JTextArea();
-        lblError = new JLabel();
         btnCustomerAdd = new JButton();
         btnCustomerUpdate = new JButton();
         btnCustomerDelete = new JButton();
+        lblError = new JLabel();
         scrollPane2 = new JScrollPane();
         tblCustomer = new JTable();
-        label7 = new JLabel();
         label8 = new JLabel();
 
         //======== this ========
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setIconImage(new ImageIcon(getClass().getResource("/programIcon.png")).getImage());
-        setResizable(false);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                thisWindowClosing(e);
+            }
+        });
         Container contentPane = getContentPane();
 
-        //---- lblName ----
-        lblName.setText(" ");
-        lblName.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblName.setHorizontalAlignment(SwingConstants.RIGHT);
-        lblName.setForeground(SystemColor.windowText);
+        //---- label3 ----
+        label3.setText("NAME:");
 
-        //======== panel1 ========
+        //---- label4 ----
+        label4.setText("PHONE:");
+
+        //---- labell ----
+        labell.setText("SURNAME:");
+
+        //---- label6 ----
+        label6.setText("E-MAIL:");
+
+        //---- label1 ----
+        label1.setText("ADDRESS:");
+
+        //======== scrollPane1 ========
         {
-            panel1.setBackground(SystemColor.activeCaption);
-
-            //---- label2 ----
-            label2.setText("NAME");
-            label2.setHorizontalAlignment(SwingConstants.RIGHT);
-            label2.setFont(new Font("Arial", Font.BOLD, 14));
-            label2.setForeground(Color.black);
-
-            //---- label9 ----
-            label9.setText("SURNAME");
-            label9.setHorizontalAlignment(SwingConstants.RIGHT);
-            label9.setFont(new Font("Arial", Font.BOLD, 14));
-            label9.setForeground(Color.black);
-
-            //---- label10 ----
-            label10.setText("PHONE");
-            label10.setHorizontalAlignment(SwingConstants.RIGHT);
-            label10.setFont(new Font("Arial", Font.BOLD, 14));
-            label10.setForeground(Color.black);
-
-            //---- label11 ----
-            label11.setText("E-MAIL");
-            label11.setHorizontalAlignment(SwingConstants.RIGHT);
-            label11.setFont(new Font("Arial", Font.BOLD, 14));
-            label11.setForeground(Color.black);
-
-            //---- txtName ----
-            txtName.setFont(new Font("Segoe UI", Font.BOLD, 12));
-
-            //---- txtSurname ----
-            txtSurname.setFont(new Font("Segoe UI", Font.BOLD, 12));
-
-            //---- txtEmail ----
-            txtEmail.setFont(new Font("Segoe UI", Font.BOLD, 12));
-
-            //---- txtPhone ----
-            txtPhone.setFont(new Font("Segoe UI", Font.BOLD, 12));
-
-            //---- label6 ----
-            label6.setText("ADDRESS");
-            label6.setHorizontalAlignment(SwingConstants.RIGHT);
-            label6.setFont(new Font("Arial", Font.BOLD, 14));
-            label6.setForeground(Color.black);
-
-            //======== scrollPane1 ========
-            {
-
-                //---- txtAddress ----
-                txtAddress.setFont(new Font("Segoe UI", Font.BOLD, 12));
-                scrollPane1.setViewportView(txtAddress);
-            }
-
-            //---- lblError ----
-            lblError.setFont(new Font("Segoe UI", Font.BOLD, 14));
-            lblError.setForeground(new Color(245, 6, 6));
-            lblError.setText(" ");
-            lblError.setHorizontalAlignment(SwingConstants.CENTER);
-
-            //---- btnCustomerAdd ----
-            btnCustomerAdd.setBackground(SystemColor.activeCaption);
-            btnCustomerAdd.setForeground(Color.white);
-            btnCustomerAdd.setIcon(new ImageIcon(getClass().getResource("/btnAddIcon.png")));
-            btnCustomerAdd.setBorder(null);
-            btnCustomerAdd.setToolTipText("ADD");
-
-            //---- btnCustomerUpdate ----
-            btnCustomerUpdate.setBackground(SystemColor.activeCaption);
-            btnCustomerUpdate.setForeground(Color.white);
-            btnCustomerUpdate.setIcon(new ImageIcon(getClass().getResource("/btnUpdateIcon.png")));
-            btnCustomerUpdate.setBorder(null);
-            btnCustomerUpdate.setToolTipText("UPDATE");
-
-            //---- btnCustomerDelete ----
-            btnCustomerDelete.setBackground(SystemColor.activeCaption);
-            btnCustomerDelete.setForeground(Color.white);
-            btnCustomerDelete.setIcon(new ImageIcon(getClass().getResource("/btnDeleteIcon.png")));
-            btnCustomerDelete.setBorder(null);
-            btnCustomerDelete.setToolTipText("DELETE");
-
-            //======== scrollPane2 ========
-            {
-
-                //---- tblCustomer ----
-                tblCustomer.setFont(new Font("Segoe UI", Font.BOLD, 14));
-                scrollPane2.setViewportView(tblCustomer);
-            }
-
-            GroupLayout panel1Layout = new GroupLayout(panel1);
-            panel1.setLayout(panel1Layout);
-            panel1Layout.setHorizontalGroup(
-                    panel1Layout.createParallelGroup()
-                            .addGroup(panel1Layout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addGroup(panel1Layout.createParallelGroup()
-                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addGroup(panel1Layout.createParallelGroup()
-                                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                                                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
-                                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                    .addComponent(txtName, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
-                                                                            .addGroup(GroupLayout.Alignment.LEADING, panel1Layout.createSequentialGroup()
-                                                                                    .addComponent(label11, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
-                                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                                    .addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE)))
-                                                                    .addGap(18, 18, 18)
-                                                                    .addGroup(panel1Layout.createParallelGroup()
-                                                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                                                    .addComponent(label9, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
-                                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                    .addComponent(txtSurname, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
-                                                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                                                    .addComponent(label10, GroupLayout.PREFERRED_SIZE, 91, GroupLayout.PREFERRED_SIZE)
-                                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                                    .addComponent(txtPhone, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))))
-                                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                                    .addComponent(label6, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                    .addGroup(panel1Layout.createParallelGroup()
-                                                                            .addComponent(lblError, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                            .addComponent(scrollPane1))))
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(btnCustomerAdd, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(btnCustomerUpdate, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(btnCustomerDelete, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addComponent(scrollPane2)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(scrollPane4, GroupLayout.PREFERRED_SIZE, 0, GroupLayout.PREFERRED_SIZE)
-                                                    .addContainerGap())))
-            );
-            panel1Layout.setVerticalGroup(
-                    panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                            .addGroup(panel1Layout.createSequentialGroup()
-                                    .addGroup(panel1Layout.createParallelGroup()
-                                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                                    .addContainerGap(323, Short.MAX_VALUE)
-                                                    .addComponent(scrollPane4, GroupLayout.PREFERRED_SIZE, 157, GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                                    .addGap(0, 0, Short.MAX_VALUE)
-                                                    .addGroup(panel1Layout.createParallelGroup()
-                                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                                    .addGroup(panel1Layout.createParallelGroup()
-                                                                            .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                                                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                                                                    .addComponent(txtName, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
-                                                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                                                    .addGap(6, 6, 6)
-                                                                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                                                            .addComponent(txtSurname, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                                                                            .addComponent(label9, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))))
-                                                                    .addGap(18, 18, 18)
-                                                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                                            .addComponent(label11, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                                                            .addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                                                            .addComponent(label10, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                                                            .addComponent(txtPhone, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
-                                                                    .addGap(18, 18, 18)
-                                                                    .addGroup(panel1Layout.createParallelGroup()
-                                                                            .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 39, GroupLayout.PREFERRED_SIZE)
-                                                                            .addComponent(label6, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))
-                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                    .addComponent(lblError, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
-                                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                                    .addGap(6, 6, 6)
-                                                                    .addGroup(panel1Layout.createParallelGroup()
-                                                                            .addComponent(btnCustomerUpdate, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                                                                            .addComponent(btnCustomerAdd, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
-                                                                            .addComponent(btnCustomerDelete, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))))
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                    .addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 305, GroupLayout.PREFERRED_SIZE)))
-                                    .addContainerGap())
-            );
+            scrollPane1.setViewportView(txtAddress);
         }
 
-        //---- label7 ----
-        label7.setText("KIRCALO");
-        label7.setHorizontalAlignment(SwingConstants.LEFT);
-        label7.setFont(new Font("Kristen ITC", Font.BOLD, 26));
-        label7.setForeground(SystemColor.textHighlight);
+        //---- btnCustomerAdd ----
+        btnCustomerAdd.setIcon(new ImageIcon(getClass().getResource("/addService32.png")));
+        btnCustomerAdd.setForeground(new Color(0, 102, 255));
+        btnCustomerAdd.setBorder(null);
+        btnCustomerAdd.setBackground(new Color(153, 255, 204));
+        btnCustomerAdd.addActionListener(e -> btnCustomerAdd(e));
+
+        //---- btnCustomerUpdate ----
+        btnCustomerUpdate.setIcon(new ImageIcon(getClass().getResource("/update32.png")));
+        btnCustomerUpdate.setBackground(new Color(153, 255, 204));
+        btnCustomerUpdate.addActionListener(e -> btnCustomerUpdateClick(e));
+
+        //---- btnCustomerDelete ----
+        btnCustomerDelete.setIcon(new ImageIcon(getClass().getResource("/delete32.png")));
+        btnCustomerDelete.setBackground(new Color(153, 255, 204));
+        btnCustomerDelete.addActionListener(e -> btnDeleteClick(e));
+
+        //======== scrollPane2 ========
+        {
+
+            //---- tblCustomer ----
+            tblCustomer.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    tblCustomerMouseClicked(e);
+                }
+            });
+            tblCustomer.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    tblCustomerKeyReleased(e);
+                }
+            });
+            scrollPane2.setViewportView(tblCustomer);
+        }
 
         //---- label8 ----
-        label8.setText("TECHNICAL SERVICE");
-        label8.setHorizontalAlignment(SwingConstants.LEFT);
-        label8.setFont(new Font("Segoe UI Black", Font.BOLD, 22));
-        label8.setForeground(SystemColor.textHighlight);
+        label8.setText("TechN\u0131ke");
+        label8.setFont(new Font("Tw Cen MT", Font.PLAIN, 14));
+        label8.setForeground(new Color(102, 0, 0));
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-                contentPaneLayout.createParallelGroup()
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup()
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addContainerGap()
+                            .addComponent(label8, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 457, Short.MAX_VALUE)
+                            .addComponent(lblName, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE))
+                        .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addComponent(btnCustomerAdd, GroupLayout.PREFERRED_SIZE, 144, GroupLayout.PREFERRED_SIZE)
+                                    .addGap(114, 114, 114)
+                                    .addComponent(btnCustomerUpdate, GroupLayout.PREFERRED_SIZE, 142, GroupLayout.PREFERRED_SIZE))
                                 .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addComponent(label7, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(label8, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
-                                                .addComponent(lblName, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(panel1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 888, Short.MAX_VALUE))
-                                .addContainerGap())
+                                    .addGroup(contentPaneLayout.createSequentialGroup()
+                                        .addComponent(label4, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtPhone, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(label6, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(contentPaneLayout.createSequentialGroup()
+                                        .addComponent(label3, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtName, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(labell, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtSurname, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE))))
+                            .addGap(18, 18, 18)
+                            .addGroup(contentPaneLayout.createParallelGroup()
+                                .addComponent(lblError, GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addGap(0, 79, Short.MAX_VALUE)
+                                    .addComponent(btnCustomerDelete, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                            .addComponent(label1, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE)))
+                    .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
-                contentPaneLayout.createParallelGroup()
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addComponent(lblName, GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addComponent(lblName)
-                                        .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                .addComponent(label7, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(label8, GroupLayout.PREFERRED_SIZE, 46, GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addGap(0, 5, Short.MAX_VALUE)
+                            .addComponent(label8, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
+                    .addGap(18, 18, 18)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnCustomerAdd, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCustomerUpdate, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCustomerDelete, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGap(18, 18, 18)
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addComponent(label1)
+                        .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addGap(18, 18, 18)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label3)
+                        .addComponent(txtName, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                        .addComponent(labell)
+                        .addComponent(txtSurname, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
+                    .addGap(18, 18, 18)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(label4)
+                        .addComponent(txtPhone, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(label6)
+                        .addComponent(txtEmail, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblError))
+                    .addGap(18, 18, 18)
+                    .addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 130, GroupLayout.PREFERRED_SIZE)
+                    .addGap(17, 17, 17))
         );
         pack();
         setLocationRelativeTo(getOwner());
@@ -290,26 +333,23 @@ public class CustomerAdd extends Base {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JLabel lblName;
-    private JPanel panel1;
-    private JScrollPane scrollPane4;
-    private JLabel label2;
-    private JLabel label9;
-    private JLabel label10;
-    private JLabel label11;
+    private JLabel label3;
     private JTextField txtName;
-    private JTextField txtSurname;
-    private JTextField txtEmail;
+    private JLabel label4;
     private JTextField txtPhone;
+    private JLabel labell;
+    private JTextField txtSurname;
     private JLabel label6;
+    private JTextField txtEmail;
+    private JLabel label1;
     private JScrollPane scrollPane1;
     private JTextArea txtAddress;
-    private JLabel lblError;
     private JButton btnCustomerAdd;
     private JButton btnCustomerUpdate;
     private JButton btnCustomerDelete;
+    private JLabel lblError;
     private JScrollPane scrollPane2;
     private JTable tblCustomer;
-    private JLabel label7;
     private JLabel label8;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

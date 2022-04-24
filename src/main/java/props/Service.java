@@ -1,30 +1,45 @@
 package props;
 
 public class Service {
-
     private int sid;
     private int cid;
     private String title;
     private String info;
     private int days;
     private String date;
-    private int Status;
+    private int status;
+    private Customer c;
+
+    public Customer getC() {
+        return c;
+    }
+
+    public void setC(Customer c) {
+        this.c = c;
+    }
 
     public Service() {
     }
 
-    @Override
-    public String toString() {
-        return "Service{" +
-                "sid=" + sid +
-                ", cid=" + cid +
-                ", title='" + title + '\'' +
-                ", info='" + info + '\'' +
-                ", days=" + days +
-                ", date='" + date + '\'' +
-                ", Status=" + Status +
-                '}';
+    public Service(int sid, int cid, String title, String info, int days, String date, int status) {
+        this.sid = sid;
+        this.cid = cid;
+        this.title = title;
+        this.info = info;
+        this.days = days;
+        this.date = date;
+        this.status = status;
     }
+
+    public Service(int sid, int cid, String title, String date, int status, Customer c) {
+        this.sid = sid;
+        this.cid = cid;
+        this.title = title;
+        this.date = date;
+        this.status = status;
+        this.c = c;
+    }
+
 
     public int getSid() {
         return sid;
@@ -75,10 +90,23 @@ public class Service {
     }
 
     public int getStatus() {
-        return Status;
+        return status;
     }
 
     public void setStatus(int status) {
-        Status = status;
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Service{" +
+                "sid=" + sid +
+                ", cid=" + cid +
+                ", title='" + title + '\'' +
+                ", info='" + info + '\'' +
+                ", days=" + days +
+                ", date='" + date + '\'' +
+                ", status=" + status +
+                '}';
     }
 }

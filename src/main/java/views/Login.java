@@ -1,5 +1,5 @@
 /*
- * Created by JFormDesigner on Wed Apr 06 15:18:33 TRT 2022
+ * Created by JFormDesigner on Wed Apr 06 15:19:32 TRT 2022
  */
 
 package views;
@@ -8,9 +8,11 @@ import java.awt.event.*;
 
 import models.UserImpl;
 import props.User;
+import utils.Mail;
 import utils.Util;
 
 import java.awt.*;
+import javax.jws.soap.SOAPBinding;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 
@@ -18,58 +20,66 @@ import javax.swing.GroupLayout;
  * @author unknown
  */
 public class Login extends Base {
-    UserImpl user= new UserImpl();
+    UserImpl user = new UserImpl();
 
     public static void main(String[] args) {
         new Login().setVisible(true);
-
     }
 
-    //user Login
-    public void userLogin() {
-        String email = txtEmail.getText().trim();
-        String password = String.valueOf(txtPassword.getPassword()).trim();
-        if (email.equals("") ) {
-            lblError.setText("Please Type Your E-Mail!");
-        } else if (!Util.isValidEmailAddress(email)) {
-            lblError.setText("Check Your E-Mail Format!");
+    //user login
+    public void userLogin(){
+        String email = txtEmail.getText().trim().toLowerCase();//trim bosluklari temizler, tolowercase karakterleri kucultur
+        String password = String.valueOf(txtPassword.getPassword()).trim();//password ozelligi geregi string dondurmez,char dizisi dondurur
+        if (email.equals("")){
             txtEmail.requestFocus();
-        } else if (password.length()==0) {
-            lblError.setText("Please Type Your Password!");
-            txtPassword.requestFocus();
-        } else {
+            lblError.setText("Please enter an e-mail!");
+        }else if(!Util.isValidEmailAddress(email)){//validation dogru degilse
+            lblError.setText("Your e-mail format is fail!");
+        }
+        else if (password.length() == 0){
+            lblError.setText("Please enter a password!");
+            txtPassword.requestFocus();//hataya odaklan ve imleci oraya kaydir
+        }
+        else {
             lblError.setText("");
-            boolean status=user.userLogin(email,password);
-            if (status) { //giriş başarılı
+            boolean status = user.userLogin(email, password);
+            if (status){
+                //giris basarili
                 Dashboard dashboard = new Dashboard();
                 dashboard.setVisible(true);
                 dispose();
-            } else {
-                lblError.setText("E-Mail or Password Fail");
+            }
+            else
+            {
+                lblError.setText("Email or password fail");
             }
 
+
+
         }
-
     }
-
 
     public Login() {
         initComponents();
-        txtPassword.setText("5");
+        txtPassword.setText("12345");
     }
 
     private void btnLoginClick(ActionEvent e) {
+
         userLogin();
     }
 
     private void txtEmailKeyReleased(KeyEvent e) {
-        if (e.getKeyCode()== KeyEvent.VK_ENTER)
-        userLogin();
+        if (e.getKeyCode() == KeyEvent.VK_ENTER){
+            userLogin();
+        }
+
     }
 
     private void txtPasswordKeyReleased(KeyEvent e) {
-        if (e.getKeyCode()== KeyEvent.VK_ENTER)
-        userLogin();
+        if (e.getKeyCode() == KeyEvent.VK_ENTER){
+            userLogin();
+        }
     }
 
     private void initComponents() {

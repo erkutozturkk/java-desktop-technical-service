@@ -6,6 +6,6 @@ import java.awt.*;
 public class Base extends JFrame {
 
     public void setBackground(Color bgColor) {
-        super.getContentPane().setBackground(Color.GRAY);
+        super.getContentPane().setBackground(Color.pink);
     }
 }
